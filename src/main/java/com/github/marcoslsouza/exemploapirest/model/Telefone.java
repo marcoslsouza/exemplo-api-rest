@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Telefone {
 
@@ -16,7 +18,10 @@ public class Telefone {
 	
 	private String numero;
 	
-	@ManyToOne
+	// Evitar recursividade
+	@JsonIgnore
+	// optional = false para cadastrar telefone precisa ter usuario
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "usuario")
 	private Usuario usuario;
 

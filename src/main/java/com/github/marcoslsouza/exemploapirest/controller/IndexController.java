@@ -27,6 +27,7 @@ public class IndexController {
 	@PostMapping(value = "/", produces = "application/json")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseEntity<Usuario> init(@RequestBody Usuario usuario) {
+		associaUsuarioTelefone(usuario);
 		usuarioRepository.save(usuario);
 		return ResponseEntity.ok(usuario);
 	}
@@ -34,6 +35,7 @@ public class IndexController {
 	@PutMapping(value = "/{id}", produces = "application/json")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizar(@RequestBody Usuario usuarioAtualizado, @PathVariable("id") Long id) {
+		associaUsuarioTelefone(usuarioAtualizado);
 		usuarioRepository.findById(id).map(usuario -> {
 			usuarioAtualizado.setId(usuario.getId());
 			return usuarioRepository.save(usuarioAtualizado);
@@ -61,5 +63,11 @@ public class IndexController {
 	public Iterable<Usuario> buscarTodos() {
 		
 		return usuarioRepository.findAll();
+	}
+	
+	private void associaUsuarioTelefone(Usuario usuario) {
+		for(int pos = 0; pos < usuario.getTelefones().size(); pos++) {
+			usuario.getTelefones().get(pos).setUsuario(usuario);
+		}
 	}
 }
